@@ -4,9 +4,10 @@ let chao = [];
 let puloSound;
 let velocidade = 3;
 
-let imgPersonagem, imgInimigo, imgChao;
+let imgInimigo, imgChao;
+let personagemAtual = 0;
 function preload() {
-    imgPersonagem = loadImage('assets/platformChar_walk1.png');
+    imgPersonagens = [loadImage('assets/platformChar_walk1.png'), loadImage('assets/platformChar_walk2.png')];
     imgInimigo = loadImage('assets/platformPack_tile043.png');
     imgChao = loadImage('assets/platformPack_tile013.png');
     puloSound = loadSound('assets/footstep09.ogg');
@@ -16,7 +17,6 @@ function setup() {
     createCanvas(800, 400);
 
     personagem = {
-        img: imgPersonagem,
         x: 50,
         y: height - 96 - 64,
         width: 96,
@@ -54,9 +54,21 @@ function draw() {
         image(tile.img, tile.x, tile.y, tile.width, tile.height);
         tile.x -= velocidade;
         if (tile.x <= -64) {
-            tile.x = width;
+            // move pro fim da tela
+            // mas desloca de acordo com o delta de pixels que ficou fora da tela
+            // mais um tamanho do sprite
+            tile.x = width + (tile.x + 64);
+
+
+            // tile.x = width;
         }
     }
+
+    // troca o personagem atual para o proximo sprite
+    // se 0 vai pro 1
+    // se 1 vai pro 0
+    personagemAtual = (personagemAtual + 1) % 2;
+    personagem.img = imgPersonagens[personagemAtual];
 
     // Desenhar personagem
     image(personagem.img, personagem.x, personagem.y, personagem.width, personagem.height);
